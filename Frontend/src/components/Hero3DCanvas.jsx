@@ -156,31 +156,32 @@ export default function Hero3DCanvas({ scrollProgress = 0, onModeChange }) {
         if (color.a < 0.05) discard;
 
         // Dynamic 3D lighting simulation
-        vec3 lightPos = vec3(uMouse.x * 2.5 + 0.8, -uMouse.y * 2.5 + 1.2, 3.2);
+        vec3 lightPos = vec3(uMouse.x * 2.2 + 0.5, -uMouse.y * 2.2 + 1.0, 3.5);
         vec3 lightDir = normalize(lightPos - vPosition);
         float diff = max(dot(vNormal, lightDir), 0.0);
         
         // Ambient rim light (subtle warm studio golden back-edge)
         float rim = 1.0 - max(dot(normalize(-vPosition), vNormal), 0.0);
-        rim = pow(rim, 3.5);
-        vec3 rimColor = vec3(0.92, 0.62, 0.28) * rim * 0.85;
+        rim = pow(clamp(rim, 0.0, 1.0), 3.0);
+        vec3 rimColor = vec3(0.92, 0.65, 0.32) * rim * 0.4;
 
-        // Golden scan flare across jawline and ear (as seen in Instagram video)
+        // Golden scan flare localized STRICTLY to ear / jawline edge (matching video)
         float scanDist = abs(vUv.y - uScanPos);
-        float scanGlow = smoothstep(0.12, 0.0, scanDist) * uScanActive;
-        // Ear/jaw highlight accentuation
-        float earAccent = smoothstep(0.2, 0.8, vUv.x) * smoothstep(0.3, 0.6, vUv.y);
-        vec3 flare = vec3(1.0, 0.72, 0.32) * (scanGlow * 1.6 + scanGlow * earAccent * 2.0);
+        float scanGlow = smoothstep(0.08, 0.0, scanDist) * uScanActive;
+        // Ear/jaw accentuation on the side
+        float earRegion = smoothstep(0.60, 0.72, vUv.x) * smoothstep(0.90, 0.76, vUv.x)
+                        * smoothstep(0.30, 0.42, vUv.y) * smoothstep(0.62, 0.48, vUv.y);
+        vec3 flare = vec3(1.0, 0.72, 0.28) * (scanGlow * earRegion * 3.2);
 
         // Topographic contour lines effect (Mode: scan)
         vec3 outColor = color.rgb;
         if (uMode > 0.5) {
-          float contours = fract((vDepth * 26.0) + (uTime * 0.3));
-          float line = smoothstep(0.85, 0.95, contours);
-          outColor = mix(outColor * 0.45, vec3(0.98, 0.76, 0.42), line * 0.9);
+          float contours = fract((vDepth * 28.0) + (uTime * 0.4));
+          float line = smoothstep(0.82, 0.96, contours);
+          outColor = mix(outColor * 0.35, vec3(0.98, 0.76, 0.42), line * 0.95);
         } else {
-          // Subtle warm luxury illumination
-          outColor = outColor * (0.85 + diff * 0.28) + rimColor + flare;
+          // Clean natural studio lighting preserving Anurag's face, hair, and glasses
+          outColor = outColor * (0.92 + diff * 0.16) + rimColor + flare;
         }
 
         // Dissolve alpha when dispersed
