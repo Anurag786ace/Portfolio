@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SmoothReveal from './SmoothReveal';
 
 export default function TopicsSection() {
   const [selectedTopic, setSelectedTopic] = useState(0);
@@ -37,29 +38,31 @@ export default function TopicsSection() {
   return (
     <section id="topics" style={{ borderTop: '1px solid var(--border-subtle)' }}>
       <div className="container">
-        <div style={{ maxWidth: '780px', marginBottom: '4rem' }}>
-          <div className="section-badge">
-            <span className="badge-dot" />
-            <span>TOPICS & DOMAIN MASTERY</span>
+        <SmoothReveal>
+          <div style={{ maxWidth: '780px', marginBottom: '4rem' }}>
+            <div className="section-badge">
+              <span className="badge-dot" />
+              <span>TOPICS & DOMAIN MASTERY</span>
+            </div>
+
+            <h2
+              style={{
+                fontSize: 'clamp(2.5rem, 4.5vw, 4rem)',
+                lineHeight: 1.05,
+                fontWeight: 700,
+                letterSpacing: '-0.03em',
+                marginBottom: '1.25rem'
+              }}
+            >
+              Where code meets craftsmanship.
+            </h2>
+
+            <p style={{ fontSize: '1.15rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+              Deep exploration at the convergence of high-end visual design, high-frequency algorithms,
+              and machine intelligence.
+            </p>
           </div>
-
-          <h2
-            style={{
-              fontSize: 'clamp(2.5rem, 4.5vw, 4rem)',
-              lineHeight: 1.05,
-              fontWeight: 700,
-              letterSpacing: '-0.03em',
-              marginBottom: '1.25rem'
-            }}
-          >
-            Where code meets craftsmanship.
-          </h2>
-
-          <p style={{ fontSize: '1.15rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-            Deep exploration at the convergence of high-end visual design, high-frequency algorithms,
-            and machine intelligence.
-          </p>
-        </div>
+        </SmoothReveal>
 
         {/* Interactive Topic Tabs and Detailed Display */}
         <div
@@ -72,160 +75,194 @@ export default function TopicsSection() {
           className="topics-layout"
         >
           {/* Left: Topic Selector List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {topics.map((t, idx) => {
-              const isSelected = selectedTopic === idx;
-              return (
-                <div
-                  key={idx}
-                  onClick={() => setSelectedTopic(idx)}
-                  style={{
-                    padding: '1.4rem 1.6rem',
-                    borderRadius: 'var(--radius-md)',
-                    background: isSelected ? 'var(--bg-dark)' : 'var(--bg-card)',
-                    color: isSelected ? '#fff' : 'var(--text-primary)',
-                    border: '1px solid',
-                    borderColor: isSelected ? 'transparent' : 'var(--border-subtle)',
-                    cursor: 'pointer',
-                    transition: 'all var(--transition-fast)',
-                    boxShadow: isSelected ? '0 12px 28px rgba(0,0,0,0.2)' : 'none'
-                  }}
-                >
+          <SmoothReveal direction="left">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {topics.map((t, idx) => {
+                const isSelected = selectedTopic === idx;
+                return (
                   <div
+                    key={idx}
+                    onClick={() => setSelectedTopic(idx)}
                     style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '0.7rem',
-                      letterSpacing: '0.08em',
-                      color: isSelected ? 'var(--accent-gold)' : 'var(--text-muted)',
-                      marginBottom: '0.4rem',
-                      fontWeight: 600
+                      padding: '1.4rem 1.6rem',
+                      borderRadius: 'var(--radius-md)',
+                      background: isSelected ? 'var(--bg-dark)' : 'var(--bg-card)',
+                      color: isSelected ? '#fff' : 'var(--text-primary)',
+                      border: '1px solid',
+                      borderColor: isSelected ? 'transparent' : 'var(--border-subtle)',
+                      cursor: 'pointer',
+                      transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                      boxShadow: isSelected ? '0 12px 28px rgba(0,0,0,0.2)' : 'none',
+                      transform: isSelected ? 'scale(1.02)' : 'scale(1)'
                     }}
                   >
-                    0{idx + 1} · {t.tag}
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.7rem',
+                        letterSpacing: '0.08em',
+                        color: isSelected ? 'var(--accent-gold)' : 'var(--text-muted)',
+                        marginBottom: '0.4rem',
+                        fontWeight: 600,
+                        transition: 'color 0.3s ease'
+                      }}
+                    >
+                      0{idx + 1} · {t.tag}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-display)',
+                        fontSize: '1.2rem',
+                        fontWeight: 700,
+                        lineHeight: 1.25
+                      }}
+                    >
+                      {t.title}
+                    </div>
                   </div>
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontSize: '1.2rem',
-                      fontWeight: 700,
-                      lineHeight: 1.25
-                    }}
-                  >
-                    {t.title}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          </SmoothReveal>
 
           {/* Right: Topic Expanded Showcase */}
-          <div
-            className="glass-card"
-            style={{
-              padding: '3rem 2.5rem',
-              position: 'relative',
-              overflow: 'hidden'
-            }}
-          >
+          <SmoothReveal direction="right" delay={200}>
             <div
+              className="glass-card"
               style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.75rem',
-                color: 'var(--accent-gold)',
-                fontWeight: 700,
-                letterSpacing: '0.1em',
-                marginBottom: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem'
+                padding: '3rem 2.5rem',
+                position: 'relative',
+                overflow: 'hidden'
               }}
             >
-              <span>DEEP DIVE // FOCUS {selectedTopic + 1}</span>
-            </div>
+              {/* Decorative background gradient */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '-50px',
+                  right: '-50px',
+                  width: '200px',
+                  height: '200px',
+                  background: 'radial-gradient(circle, var(--accent-gold-glow), transparent 70%)',
+                  opacity: 0.15,
+                  pointerEvents: 'none',
+                  transition: 'opacity 0.5s ease'
+                }}
+              />
 
-            <h3
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '2.1rem',
-                fontWeight: 700,
-                lineHeight: 1.15,
-                marginBottom: '1.25rem',
-                color: 'var(--text-primary)'
-              }}
-            >
-              {topics[selectedTopic].title}
-            </h3>
-
-            <p
-              style={{
-                fontSize: '1.05rem',
-                lineHeight: 1.7,
-                color: 'var(--text-secondary)',
-                marginBottom: '2rem'
-              }}
-            >
-              {topics[selectedTopic].desc}
-            </p>
-
-            <div
-              style={{
-                padding: '1.2rem 1.5rem',
-                background: 'rgba(25, 23, 20, 0.04)',
-                borderRadius: 'var(--radius-md)',
-                marginBottom: '2rem',
-                borderLeft: '3px solid var(--accent-gold)'
-              }}
-            >
               <div
                 style={{
                   fontFamily: 'var(--font-mono)',
-                  fontSize: '0.72rem',
+                  fontSize: '0.75rem',
+                  color: 'var(--accent-gold)',
                   fontWeight: 700,
-                  color: 'var(--text-primary)',
-                  marginBottom: '0.3rem'
+                  letterSpacing: '0.1em',
+                  marginBottom: '1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
                 }}
               >
-                KEY COMPETENCY & CAPABILITY
+                <span>DEEP DIVE // FOCUS {selectedTopic + 1}</span>
               </div>
-              <div style={{ fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
-                {topics[selectedTopic].highlight}
-              </div>
-            </div>
 
-            <div>
-              <div
+              <h3
+                key={`title-${selectedTopic}`}
                 style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '0.72rem',
-                  color: 'var(--text-muted)',
-                  marginBottom: '0.8rem',
-                  fontWeight: 600
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '2.1rem',
+                  fontWeight: 700,
+                  lineHeight: 1.15,
+                  marginBottom: '1.25rem',
+                  color: 'var(--text-primary)',
+                  animation: 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
               >
-                CORE TECH IN PRODUCTION:
+                {topics[selectedTopic].title}
+              </h3>
+
+              <p
+                key={`desc-${selectedTopic}`}
+                style={{
+                  fontSize: '1.05rem',
+                  lineHeight: 1.7,
+                  color: 'var(--text-secondary)',
+                  marginBottom: '2rem',
+                  animation: 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.05s backwards'
+                }}
+              >
+                {topics[selectedTopic].desc}
+              </p>
+
+              <div
+                key={`hl-${selectedTopic}`}
+                style={{
+                  padding: '1.2rem 1.5rem',
+                  background: 'rgba(25, 23, 20, 0.04)',
+                  borderRadius: 'var(--radius-md)',
+                  marginBottom: '2rem',
+                  borderLeft: '3px solid var(--accent-gold)',
+                  animation: 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards'
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    color: 'var(--text-primary)',
+                    marginBottom: '0.3rem'
+                  }}
+                >
+                  KEY COMPETENCY & CAPABILITY
+                </div>
+                <div style={{ fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
+                  {topics[selectedTopic].highlight}
+                </div>
               </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                {topics[selectedTopic].skills.map((s, i) => (
-                  <span
-                    key={i}
-                    style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '0.82rem',
-                      fontWeight: 600,
-                      padding: '0.4rem 0.85rem',
-                      background: '#fff',
-                      color: 'var(--text-primary)',
-                      borderRadius: 'var(--radius-pill)',
-                      border: '1px solid var(--border-subtle)',
-                      boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
-                    }}
-                  >
-                    {s}
-                  </span>
-                ))}
+
+              <div
+                key={`skills-${selectedTopic}`}
+                style={{
+                  animation: 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards'
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '0.72rem',
+                    color: 'var(--text-muted)',
+                    marginBottom: '0.8rem',
+                    fontWeight: 600
+                  }}
+                >
+                  CORE TECH IN PRODUCTION:
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  {topics[selectedTopic].skills.map((s, i) => (
+                    <span
+                      key={i}
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.82rem',
+                        fontWeight: 600,
+                        padding: '0.4rem 0.85rem',
+                        background: '#fff',
+                        color: 'var(--text-primary)',
+                        borderRadius: 'var(--radius-pill)',
+                        border: '1px solid var(--border-subtle)',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                        animation: `slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${0.2 + i * 0.05}s backwards`
+                      }}
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          </SmoothReveal>
         </div>
       </div>
     </section>

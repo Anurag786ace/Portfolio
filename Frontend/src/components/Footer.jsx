@@ -17,6 +17,12 @@ export default function Footer() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const socialLinks = [
+    { name: 'GitHub', url: 'https://github.com/Anurag786ace' },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/anurag-giri-334259241' },
+    { name: 'Email', url: 'mailto:sankhaanurag2005@gmail.com' }
+  ];
+
   return (
     <footer
       style={{
@@ -54,6 +60,44 @@ export default function Footer() {
             <p style={{ color: 'rgba(255, 255, 255, 0.55)', fontSize: '0.88rem' }}>
               Creative Technologist & Full-Stack AI Engineer
             </p>
+          </div>
+
+          {/* Social Links */}
+          <div style={{ display: 'flex', gap: '0.6rem' }}>
+            {socialLinks.map((link, i) => (
+              <a
+                key={i}
+                href={link.url}
+                target={link.url.startsWith('mailto:') ? undefined : '_blank'}
+                rel="noreferrer"
+                style={{
+                  padding: '0.45rem 1rem',
+                  background: 'rgba(255, 255, 255, 0.06)',
+                  borderRadius: 'var(--radius-pill)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  textDecoration: 'none',
+                  fontSize: '0.78rem',
+                  fontFamily: 'var(--font-mono)',
+                  fontWeight: 500,
+                  transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.14)';
+                  e.currentTarget.style.color = '#fff';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.borderColor = 'var(--accent-gold)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                }}
+              >
+                {link.name}
+              </a>
+            ))}
           </div>
 
           {/* Realtime Timezone Clock */}
@@ -98,10 +142,16 @@ export default function Footer() {
               fontFamily: 'var(--font-mono)',
               fontSize: '0.75rem',
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.16)'}
-            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.16)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
           >
             <span>BACK TO TOP</span>
             <span>↑</span>

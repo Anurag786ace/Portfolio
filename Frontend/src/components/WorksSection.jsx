@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SmoothReveal from './SmoothReveal';
 import bloomImg from '../assets/fibrous_bloom_orb.jpg';
 import canImg from '../assets/futuristic_can_showcase.jpg';
 
@@ -86,72 +87,75 @@ export default function WorksSection({ onSelectProject }) {
     <section id="works" style={{ borderTop: '1px solid var(--border-subtle)' }}>
       <div className="container">
         {/* Section Heading */}
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'flex-end',
-            justifyContent: 'space-between',
-            gap: '2rem',
-            marginBottom: '3.5rem'
-          }}
-        >
-          <div>
-            <div className="section-badge">
-              <span className="badge-dot" />
-              <span>SELECTED WORKS & LAB EXPERIMENTS</span>
-            </div>
-            <h2
-              style={{
-                fontSize: 'clamp(2.5rem, 4.5vw, 4rem)',
-                lineHeight: 1.05,
-                fontWeight: 700,
-                letterSpacing: '-0.03em'
-              }}
-            >
-              Crafting experiences that linger.
-            </h2>
-          </div>
-
-          {/* Filter Pills */}
+        <SmoothReveal>
           <div
             style={{
               display: 'flex',
               flexWrap: 'wrap',
-              gap: '0.4rem',
-              background: 'rgba(25, 23, 20, 0.05)',
-              padding: '0.3rem',
-              borderRadius: 'var(--radius-pill)',
-              border: '1px solid var(--border-subtle)'
+              alignItems: 'flex-end',
+              justifyContent: 'space-between',
+              gap: '2rem',
+              marginBottom: '3.5rem'
             }}
           >
-            {[
-              { id: 'all', label: 'All Artifacts' },
-              { id: '3d-ai', label: '3D & Generative' },
-              { id: 'interactive-3d', label: 'Commercial 3D' },
-              { id: 'ai-agents', label: 'AI & Agents' },
-              { id: 'frontend', label: 'UI Architecture' }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveFilter(tab.id)}
+            <div>
+              <div className="section-badge">
+                <span className="badge-dot" />
+                <span>SELECTED WORKS & LAB EXPERIMENTS</span>
+              </div>
+              <h2
                 style={{
-                  padding: '0.45rem 1rem',
-                  borderRadius: 'var(--radius-pill)',
-                  border: 'none',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  background: activeFilter === tab.id ? 'var(--bg-dark)' : 'transparent',
-                  color: activeFilter === tab.id ? '#fff' : 'var(--text-secondary)'
+                  fontSize: 'clamp(2.5rem, 4.5vw, 4rem)',
+                  lineHeight: 1.05,
+                  fontWeight: 700,
+                  letterSpacing: '-0.03em'
                 }}
               >
-                {tab.label}
-              </button>
-            ))}
+                Crafting experiences that linger.
+              </h2>
+            </div>
+
+            {/* Filter Pills */}
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '0.4rem',
+                background: 'rgba(25, 23, 20, 0.05)',
+                padding: '0.3rem',
+                borderRadius: 'var(--radius-pill)',
+                border: '1px solid var(--border-subtle)'
+              }}
+            >
+              {[
+                { id: 'all', label: 'All Artifacts' },
+                { id: '3d-ai', label: '3D & Generative' },
+                { id: 'interactive-3d', label: 'Commercial 3D' },
+                { id: 'ai-agents', label: 'AI & Agents' },
+                { id: 'frontend', label: 'UI Architecture' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveFilter(tab.id)}
+                  style={{
+                    padding: '0.45rem 1rem',
+                    borderRadius: 'var(--radius-pill)',
+                    border: 'none',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                    background: activeFilter === tab.id ? 'var(--bg-dark)' : 'transparent',
+                    color: activeFilter === tab.id ? '#fff' : 'var(--text-secondary)',
+                    transform: activeFilter === tab.id ? 'scale(1.02)' : 'scale(1)'
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        </SmoothReveal>
 
         {/* Projects Grid */}
         <div
@@ -162,283 +166,308 @@ export default function WorksSection({ onSelectProject }) {
           }}
           className="works-grid"
         >
-          {filteredProjects.map(proj => {
+          {filteredProjects.map((proj, projIdx) => {
             const tilt = tiltAngles[proj.id] || { rx: 0, ry: 0 };
 
             return (
-              <div
-                key={proj.id}
-                onMouseMove={(e) => handleMouseMove(e, proj.id)}
-                onMouseLeave={() => handleMouseLeave(proj.id)}
-                style={{
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-card)',
-                  borderRadius: 'var(--radius-lg)',
-                  overflow: 'hidden',
-                  transform: `perspective(1000px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
-                  transition: 'transform 0.15s ease-out, box-shadow 0.3s ease, border-color 0.3s ease',
-                  boxShadow: '0 20px 40px -15px rgba(25, 22, 19, 0.08)',
-                  display: 'flex',
-                  flexDirection: 'column'
-                }}
-                className="project-card"
-              >
-                {/* Media Preview Box */}
+              <SmoothReveal key={proj.id} delay={projIdx * 150}>
                 <div
+                  onMouseMove={(e) => handleMouseMove(e, proj.id)}
+                  onMouseLeave={() => handleMouseLeave(proj.id)}
                   style={{
-                    position: 'relative',
-                    width: '100%',
-                    height: '360px',
-                    background: '#181715',
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border-card)',
+                    borderRadius: 'var(--radius-lg)',
                     overflow: 'hidden',
+                    transform: `perspective(1000px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
+                    transition: 'transform 0.15s ease-out, box-shadow 0.3s ease, border-color 0.3s ease',
+                    boxShadow: '0 20px 40px -15px rgba(25, 22, 19, 0.08)',
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
+                    flexDirection: 'column'
                   }}
+                  className="project-card"
                 >
-                  {proj.image ? (
-                    <img
-                      src={proj.image}
-                      alt={proj.title}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
-                      }}
-                      className="project-img"
-                    />
-                  ) : proj.customVisual === 'agent-matrix' ? (
-                    // Futuristic Matrix Agent Terminal Graphic
-                    <div
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        background: 'linear-gradient(135deg, #141311 0%, #201e1a 100%)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        padding: '2rem',
-                        position: 'relative'
-                      }}
-                    >
+                  {/* Media Preview Box */}
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: '100%',
+                      height: '360px',
+                      background: '#181715',
+                      overflow: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    {proj.image ? (
+                      <img
+                        src={proj.image}
+                        alt={proj.title}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
+                        }}
+                        className="project-img"
+                      />
+                    ) : proj.customVisual === 'agent-matrix' ? (
+                      // Futuristic Matrix Agent Terminal Graphic
                       <div
                         style={{
-                          width: '80px',
-                          height: '80px',
+                          width: '100%',
+                          height: '100%',
+                          background: 'linear-gradient(135deg, #141311 0%, #201e1a 100%)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          padding: '2rem',
+                          position: 'relative'
+                        }}
+                      >
+                        {/* Animated rotating glow ring */}
+                        <div
+                          style={{
+                            width: '100px',
+                            height: '100px',
+                            borderRadius: '50%',
+                            border: '2px solid transparent',
+                            borderTopColor: 'var(--accent-gold)',
+                            borderRightColor: 'var(--accent-gold)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginBottom: '1.25rem',
+                            animation: 'rotateGlow 3s linear infinite',
+                            boxShadow: '0 0 30px var(--accent-gold-glow)'
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: '70px',
+                              height: '70px',
+                              borderRadius: '50%',
+                              border: '1.5px solid transparent',
+                              borderBottomColor: 'var(--accent-warm)',
+                              borderLeftColor: 'var(--accent-warm)',
+                              animation: 'rotateGlow 2s linear infinite reverse',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                          >
+                            <span style={{ fontSize: '1.5rem', color: 'var(--accent-gold)' }}>⚡</span>
+                          </div>
+                        </div>
+                        <div
+                          style={{
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: '0.85rem',
+                            color: '#fff',
+                            letterSpacing: '0.1em',
+                            textAlign: 'center'
+                          }}
+                        >
+                          REACTIVE AGENT GRAPH ACTIVE
+                        </div>
+                        <div
+                          style={{
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: '0.72rem',
+                            color: 'var(--text-muted)',
+                            marginTop: '0.5rem'
+                          }}
+                        >
+                          6 Parallel Workers · Zero Bottlenecks
+                        </div>
+                      </div>
+                    ) : (
+                      // Prism UI Geometric Waveform Graphic with animation
+                      <div
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          background: 'radial-gradient(circle at center, #2c2722 0%, #151412 100%)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          padding: '2rem'
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: 'flex',
+                            gap: '8px',
+                            alignItems: 'flex-end',
+                            height: '60px',
+                            marginBottom: '1rem'
+                          }}
+                        >
+                          {[40, 65, 25, 80, 50, 95, 30, 70].map((h, i) => (
+                            <div
+                              key={i}
+                              style={{
+                                width: '8px',
+                                height: `${h}%`,
+                                background: 'var(--accent-gold)',
+                                borderRadius: '4px',
+                                opacity: 0.85,
+                                animation: `pulseGlow ${2 + i * 0.3}s ease-in-out infinite ${i * 0.15}s`
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <div
+                          style={{
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: '0.85rem',
+                            color: '#fff',
+                            letterSpacing: '0.1em'
+                          }}
+                        >
+                          60FPS SPRING MOTION ENGINE
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Corner Badge */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '1.25rem',
+                        left: '1.25rem',
+                        background: 'rgba(22, 21, 19, 0.85)',
+                        backdropFilter: 'blur(10px)',
+                        color: 'var(--accent-gold)',
+                        padding: '0.35rem 0.8rem',
+                        borderRadius: 'var(--radius-pill)',
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.68rem',
+                        fontWeight: 700,
+                        letterSpacing: '0.08em',
+                        border: '1px solid rgba(255, 255, 255, 0.12)'
+                      }}
+                    >
+                      {proj.badge}
+                    </div>
+                  </div>
+
+                  {/* Card Information */}
+                  <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: '0.6rem'
+                      }}
+                    >
+                      <h3
+                        style={{
+                          fontFamily: 'var(--font-display)',
+                          fontSize: '1.65rem',
+                          fontWeight: 700,
+                          color: 'var(--text-primary)',
+                          letterSpacing: '-0.02em'
+                        }}
+                      >
+                        {proj.title}
+                      </h3>
+                      <a
+                        href={proj.githubUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{
+                          width: '34px',
+                          height: '34px',
                           borderRadius: '50%',
-                          border: '2px solid var(--accent-gold)',
+                          background: 'rgba(25, 23, 20, 0.06)',
+                          border: '1px solid var(--border-subtle)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          marginBottom: '1.25rem',
-                          boxShadow: '0 0 30px var(--accent-gold-glow)'
+                          textDecoration: 'none',
+                          color: 'var(--text-primary)',
+                          fontSize: '1rem',
+                          fontWeight: 700,
+                          transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                          flexShrink: 0
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'var(--bg-dark)';
+                          e.currentTarget.style.color = '#fff';
+                          e.currentTarget.style.transform = 'rotate(45deg)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'rgba(25, 23, 20, 0.06)';
+                          e.currentTarget.style.color = 'var(--text-primary)';
+                          e.currentTarget.style.transform = 'rotate(0deg)';
                         }}
                       >
-                        <span style={{ fontSize: '2rem', color: 'var(--accent-gold)' }}>⚡</span>
-                      </div>
-                      <div
-                        style={{
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '0.85rem',
-                          color: '#fff',
-                          letterSpacing: '0.1em',
-                          textAlign: 'center'
-                        }}
-                      >
-                        REACTIVE AGENT GRAPH ACTIVE
-                      </div>
-                      <div
-                        style={{
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '0.72rem',
-                          color: 'var(--text-muted)',
-                          marginTop: '0.5rem'
-                        }}
-                      >
-                        6 Parallel Workers · Zero Bottlenecks
-                      </div>
+                        ↗
+                      </a>
                     </div>
-                  ) : (
-                    // Prism UI Geometric Waveform Graphic
+
+                    <p
+                      style={{
+                        fontSize: '0.96rem',
+                        lineHeight: 1.55,
+                        color: 'var(--text-secondary)',
+                        marginBottom: '1.4rem'
+                      }}
+                    >
+                      {proj.desc}
+                    </p>
+
+                    {/* Highlights Bar */}
                     <div
                       style={{
-                        width: '100%',
-                        height: '100%',
-                        background: 'radial-gradient(circle at center, #2c2722 0%, #151412 100%)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        padding: '2rem'
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.72rem',
+                        color: 'var(--text-muted)',
+                        padding: '0.6rem 0.85rem',
+                        background: 'rgba(25, 23, 20, 0.03)',
+                        borderRadius: 'var(--radius-sm)',
+                        marginBottom: '1.25rem',
+                        borderLeft: '2px solid var(--accent-gold)'
                       }}
                     >
-                      <div
-                        style={{
-                          display: 'flex',
-                          gap: '8px',
-                          alignItems: 'flex-end',
-                          height: '60px',
-                          marginBottom: '1rem'
-                        }}
-                      >
-                        {[40, 65, 25, 80, 50, 95, 30, 70].map((h, i) => (
-                          <div
-                            key={i}
-                            style={{
-                              width: '8px',
-                              height: `${h}%`,
-                              background: 'var(--accent-gold)',
-                              borderRadius: '4px',
-                              opacity: 0.85
-                            }}
-                          />
-                        ))}
-                      </div>
-                      <div
-                        style={{
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '0.85rem',
-                          color: '#fff',
-                          letterSpacing: '0.1em'
-                        }}
-                      >
-                        60FPS SPRING MOTION ENGINE
-                      </div>
+                      {proj.metrics}
                     </div>
-                  )}
 
-                  {/* Corner Badge */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '1.25rem',
-                      left: '1.25rem',
-                      background: 'rgba(22, 21, 19, 0.85)',
-                      backdropFilter: 'blur(10px)',
-                      color: 'var(--accent-gold)',
-                      padding: '0.35rem 0.8rem',
-                      borderRadius: 'var(--radius-pill)',
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '0.68rem',
-                      fontWeight: 700,
-                      letterSpacing: '0.08em',
-                      border: '1px solid rgba(255, 255, 255, 0.12)'
-                    }}
-                  >
-                    {proj.badge}
-                  </div>
-                </div>
-
-                {/* Card Information */}
-                <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginBottom: '0.6rem'
-                    }}
-                  >
-                    <h3
+                    {/* Tech Stack Pills */}
+                    <div
                       style={{
-                        fontFamily: 'var(--font-display)',
-                        fontSize: '1.65rem',
-                        fontWeight: 700,
-                        color: 'var(--text-primary)',
-                        letterSpacing: '-0.02em'
-                      }}
-                    >
-                      {proj.title}
-                    </h3>
-                    <a
-                      href={proj.githubUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{
-                        width: '34px',
-                        height: '34px',
-                        borderRadius: '50%',
-                        background: 'rgba(25, 23, 20, 0.06)',
-                        border: '1px solid var(--border-subtle)',
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        textDecoration: 'none',
-                        color: 'var(--text-primary)',
-                        fontSize: '1rem',
-                        fontWeight: 700,
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'var(--bg-dark)';
-                        e.currentTarget.style.color = '#fff';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'rgba(25, 23, 20, 0.06)';
-                        e.currentTarget.style.color = 'var(--text-primary)';
+                        flexWrap: 'wrap',
+                        gap: '0.4rem',
+                        marginTop: 'auto'
                       }}
                     >
-                      ↗
-                    </a>
-                  </div>
-
-                  <p
-                    style={{
-                      fontSize: '0.96rem',
-                      lineHeight: 1.55,
-                      color: 'var(--text-secondary)',
-                      marginBottom: '1.4rem'
-                    }}
-                  >
-                    {proj.desc}
-                  </p>
-
-                  {/* Highlights Bar */}
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '0.72rem',
-                      color: 'var(--text-muted)',
-                      padding: '0.6rem 0.85rem',
-                      background: 'rgba(25, 23, 20, 0.03)',
-                      borderRadius: 'var(--radius-sm)',
-                      marginBottom: '1.25rem',
-                      borderLeft: '2px solid var(--accent-gold)'
-                    }}
-                  >
-                    {proj.metrics}
-                  </div>
-
-                  {/* Tech Stack Pills */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      gap: '0.4rem',
-                      marginTop: 'auto'
-                    }}
-                  >
-                    {proj.tags.map((t, i) => (
-                      <span
-                        key={i}
-                        style={{
-                          fontSize: '0.72rem',
-                          fontFamily: 'var(--font-mono)',
-                          padding: '0.25rem 0.65rem',
-                          background: 'rgba(25, 23, 20, 0.05)',
-                          borderRadius: 'var(--radius-pill)',
-                          color: 'var(--text-secondary)',
-                          border: '1px solid var(--border-subtle)'
-                        }}
-                      >
-                        {t}
-                      </span>
-                    ))}
+                      {proj.tags.map((t, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            fontSize: '0.72rem',
+                            fontFamily: 'var(--font-mono)',
+                            padding: '0.25rem 0.65rem',
+                            background: 'rgba(25, 23, 20, 0.05)',
+                            borderRadius: 'var(--radius-pill)',
+                            color: 'var(--text-secondary)',
+                            border: '1px solid var(--border-subtle)',
+                            transition: 'all 0.2s ease'
+                          }}
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </SmoothReveal>
             );
           })}
         </div>

@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Hero3DCanvas from './Hero3DCanvas';
+import TextScramble from './TextScramble';
 
 export default function HeroSection({ scrollProgress, onExploreWork, onOpenContact }) {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoaded(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <section
       id="hero"
@@ -35,12 +43,20 @@ export default function HeroSection({ scrollProgress, onExploreWork, onOpenConta
               pointerEvents: 'auto'
             }}
           >
-            <div className="section-badge">
+            {/* Badge with entrance animation */}
+            <div
+              className="section-badge"
+              style={{
+                opacity: loaded ? 1 : 0,
+                transform: loaded ? 'translateY(0)' : 'translateY(20px)',
+                transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s'
+              }}
+            >
               <span className="badge-dot" />
               <span>CREATIVE TECHNOLOGIST & AI ARCHITECT</span>
             </div>
 
-            {/* Exact Lowercase Title Match to the Video: "content that connects." */}
+            {/* Title with text scramble effect */}
             <h1
               style={{
                 fontSize: 'clamp(3.2rem, 6.5vw, 5.6rem)',
@@ -49,10 +65,14 @@ export default function HeroSection({ scrollProgress, onExploreWork, onOpenConta
                 letterSpacing: '-0.04em',
                 marginBottom: '1.8rem',
                 color: 'var(--text-primary)',
-                textTransform: 'lowercase'
+                textTransform: 'lowercase',
+                opacity: loaded ? 1 : 0,
+                transform: loaded ? 'translateY(0)' : 'translateY(30px)',
+                transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s'
               }}
             >
-              content that<br />
+              <TextScramble text="content that" delay={600} />
+              <br />
               <span
                 style={{
                   color: 'var(--text-primary)',
@@ -60,17 +80,18 @@ export default function HeroSection({ scrollProgress, onExploreWork, onOpenConta
                   display: 'inline-block'
                 }}
               >
-                connects.
+                <TextScramble text="connects." delay={900} />
                 <span
                   style={{
                     position: 'absolute',
                     bottom: '6px',
                     left: 0,
-                    width: '100%',
+                    width: loaded ? '100%' : '0%',
                     height: '4px',
                     background: 'var(--accent-gold)',
                     opacity: 0.75,
-                    borderRadius: '2px'
+                    borderRadius: '2px',
+                    transition: 'width 1s cubic-bezier(0.16, 1, 0.3, 1) 1.4s'
                   }}
                 />
               </span>
@@ -82,10 +103,13 @@ export default function HeroSection({ scrollProgress, onExploreWork, onOpenConta
                 lineHeight: 1.6,
                 color: 'var(--text-secondary)',
                 marginBottom: '2.5rem',
-                maxWidth: '480px'
+                maxWidth: '480px',
+                opacity: loaded ? 1 : 0,
+                transform: loaded ? 'translateY(0)' : 'translateY(25px)',
+                transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.7s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.7s'
               }}
             >
-              Hi, I’m <strong>Anurag Giri</strong>. I craft high-performance web applications,
+              Hi, I'm <strong>Anurag Giri</strong>. I craft high-performance web applications,
               intelligent AI workflows, and cinematic 3D digital experiences that bridge human intuition and computational precision.
             </p>
 
@@ -94,7 +118,10 @@ export default function HeroSection({ scrollProgress, onExploreWork, onOpenConta
                 display: 'flex',
                 alignItems: 'center',
                 gap: '1rem',
-                flexWrap: 'wrap'
+                flexWrap: 'wrap',
+                opacity: loaded ? 1 : 0,
+                transform: loaded ? 'translateY(0)' : 'translateY(20px)',
+                transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s'
               }}
             >
               <button
@@ -131,7 +158,10 @@ export default function HeroSection({ scrollProgress, onExploreWork, onOpenConta
                 borderTop: '1px solid var(--border-subtle)',
                 fontFamily: 'var(--font-mono)',
                 fontSize: '0.75rem',
-                color: 'var(--text-muted)'
+                color: 'var(--text-muted)',
+                opacity: loaded ? 1 : 0,
+                transform: loaded ? 'translateY(0)' : 'translateY(20px)',
+                transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.1s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.1s'
               }}
             >
               <div>
@@ -160,7 +190,9 @@ export default function HeroSection({ scrollProgress, onExploreWork, onOpenConta
               width: 'min(90vw, 760px)',
               height: 'min(85vh, 760px)',
               zIndex: 5,
-              pointerEvents: 'auto'
+              pointerEvents: 'auto',
+              opacity: loaded ? 1 : 0,
+              transition: 'opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s'
             }}
             className="hero-canvas-wrap"
           >
@@ -179,7 +211,9 @@ export default function HeroSection({ scrollProgress, onExploreWork, onOpenConta
               alignItems: 'center',
               gap: '0.75rem',
               zIndex: 10,
-              pointerEvents: 'none'
+              pointerEvents: 'none',
+              opacity: loaded ? 1 : 0,
+              transition: 'opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 1.5s'
             }}
             className="hero-scroll-hint"
           >
@@ -199,7 +233,8 @@ export default function HeroSection({ scrollProgress, onExploreWork, onOpenConta
               style={{
                 width: '1px',
                 height: '48px',
-                background: 'linear-gradient(to bottom, var(--text-muted), transparent)'
+                background: 'linear-gradient(to bottom, var(--text-muted), transparent)',
+                animation: 'pulseGlow 2s ease-in-out infinite'
               }}
             />
           </div>
