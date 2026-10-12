@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import SmoothReveal from './SmoothReveal';
+import SkillOrbitCanvas from './SkillOrbitCanvas';
+import { sound } from '../utils/audio';
 
 export default function TopicsSection() {
   const [selectedTopic, setSelectedTopic] = useState(0);
@@ -82,7 +84,11 @@ export default function TopicsSection() {
                 return (
                   <div
                     key={idx}
-                    onClick={() => setSelectedTopic(idx)}
+                    onClick={() => {
+                      setSelectedTopic(idx);
+                      sound.playClick();
+                    }}
+                    onMouseEnter={() => sound.playHover()}
                     style={{
                       padding: '1.4rem 1.6rem',
                       borderRadius: 'var(--radius-md)',
@@ -264,6 +270,11 @@ export default function TopicsSection() {
             </div>
           </SmoothReveal>
         </div>
+
+        {/* Interactive Physics Constellation Orbit */}
+        <SmoothReveal delay={200}>
+          <SkillOrbitCanvas />
+        </SmoothReveal>
       </div>
     </section>
   );

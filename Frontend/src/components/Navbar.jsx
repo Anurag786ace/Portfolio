@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { sound } from '../utils/audio';
 
-export default function Navbar({ onOpenContact }) {
+export default function Navbar({
+  onOpenContact,
+  onOpenCommandPalette,
+  soundEnabled,
+  onToggleSound,
+  currentTheme,
+  onSelectTheme
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
 
@@ -29,7 +37,15 @@ export default function Navbar({ onOpenContact }) {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
+      sound.playClick();
     }
+  };
+
+  const handleCycleTheme = () => {
+    const themes = ['alabaster', 'obsidian', 'emerald'];
+    const nextIdx = (themes.indexOf(currentTheme) + 1) % themes.length;
+    onSelectTheme(themes[nextIdx]);
+    sound.playModeSwitch();
   };
 
   return (
@@ -48,7 +64,8 @@ export default function Navbar({ onOpenContact }) {
         style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          gap: '1rem'
         }}
       >
         {/* Left: Brand / Creator Identity */}
@@ -63,21 +80,22 @@ export default function Navbar({ onOpenContact }) {
             userSelect: 'none'
           }}
         >
-          {/* Plus Mark Icon matching the video */}
+          {/* Plus Mark Icon matching the reference */}
           <div
             style={{
-              width: '32px',
-              height: '32px',
+              width: '34px',
+              height: '34px',
               borderRadius: '50%',
-              background: 'rgba(25, 23, 20, 0.08)',
-              border: '1px solid rgba(25, 23, 20, 0.12)',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-card)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontWeight: 300,
               fontSize: '1.2rem',
               color: 'var(--text-primary)',
-              transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+              transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.06)'
             }}
             className="brand-plus"
           >
@@ -112,7 +130,7 @@ export default function Navbar({ onOpenContact }) {
           </div>
         </div>
 
-        {/* Center: Floating Dark Pill Menu (Exact match to Jo Mendes / NomadaToast video) */}
+        {/* Center: Floating Dark Pill Menu */}
         <nav
           style={{
             pointerEvents: 'auto',
@@ -140,6 +158,7 @@ export default function Navbar({ onOpenContact }) {
               <button
                 key={item.id}
                 onClick={() => scrollTo(item.id)}
+                onMouseEnter={() => sound.playHover()}
                 style={{
                   background: isActive ? 'rgba(255, 255, 255, 0.14)' : 'transparent',
                   border: 'none',
@@ -153,12 +172,6 @@ export default function Navbar({ onOpenContact }) {
                   transition: 'all 0.2s ease',
                   letterSpacing: '0.01em'
                 }}
-                onMouseEnter={(e) => {
-                  if (!isActive) e.currentTarget.style.color = '#fff';
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) e.currentTarget.style.color = 'rgba(255, 255, 255, 0.65)';
-                }}
               >
                 {item.label}
               </button>
@@ -166,10 +179,103 @@ export default function Navbar({ onOpenContact }) {
           })}
         </nav>
 
-        {/* Right: CTA Pill Button (Exact match: rounded pill with circle arrow button) */}
-        <div style={{ pointerEvents: 'auto' }}>
+        {/* Right: Quick Controls & CTA */}
+        <div
+          style={{
+            pointerEvents: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.6rem'
+          }}
+        >
+          {/* ⌘K Command Palette Button */}
           <button
-            onClick={onOpenContact}
+            onClick={() => {
+              if (onOpenCommandPalette) onOpenCommandPalette();
+              sound.playClick();
+            }}
+            onMouseEnter={() => sound.playHover()}
+            title="Open Developer Command Palette (⌘K)"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-card)',
+              borderRadius: 'var(--radius-pill)',
+              padding: '0.42rem 0.75rem',
+              fontSize: '0.75rem',
+              fontFamily: 'var(--font-mono)',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <span style={{ opacity: 0.7 }}>⌘K</span>
+          </button>
+
+          {/* Procedural Sound FX Toggle */}
+          <button
+            onClick={() => {
+              if (onToggleSound) onToggleSound();
+            }}
+            onMouseEnter={() => sound.playHover()}
+            title={soundEnabled ? 'Mute Procedural Sound Effects' : 'Enable Procedural Sound Effects'}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-card)',
+              borderRadius: 'var(--radius-pill)',
+              padding: '0.42rem 0.65rem',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <div className={`sound-bars ${soundEnabled ? 'sound-playing' : ''}`}>
+              <div className="sound-bar" style={{ height: soundEnabled ? '10px' : '3px' }} />
+              <div className="sound-bar" style={{ height: soundEnabled ? '14px' : '3px' }} />
+              <div className="sound-bar" style={{ height: soundEnabled ? '6px' : '3px' }} />
+            </div>
+            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+              {soundEnabled ? 'FX' : 'MUTED'}
+            </span>
+          </button>
+
+          {/* Atmosphere Theme Switcher */}
+          <button
+            onClick={handleCycleTheme}
+            onMouseEnter={() => sound.playHover()}
+            title={`Atmosphere: ${currentTheme.toUpperCase()} (Click to toggle)`}
+            style={{
+              width: '34px',
+              height: '34px',
+              borderRadius: '50%',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-card)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              fontSize: '0.85rem',
+              color: 'var(--accent-gold)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
+              transition: 'transform 0.25s ease'
+            }}
+          >
+            {currentTheme === 'obsidian' ? '🌑' : currentTheme === 'emerald' ? '🌿' : '☀️'}
+          </button>
+
+          {/* Primary Let's Talk CTA */}
+          <button
+            onClick={() => {
+              sound.playClick();
+              onOpenContact();
+            }}
+            onMouseEnter={() => sound.playHover()}
             className="btn-pill btn-pill-dark"
             style={{
               padding: '0.45rem 0.6rem 0.45rem 1.1rem',

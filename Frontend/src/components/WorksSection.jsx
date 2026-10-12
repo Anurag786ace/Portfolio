@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SmoothReveal from './SmoothReveal';
 import bloomImg from '../assets/fibrous_bloom_orb.jpg';
 import canImg from '../assets/futuristic_can_showcase.jpg';
+import { sound } from '../utils/audio';
 
 export default function WorksSection({ onSelectProject }) {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -136,7 +137,11 @@ export default function WorksSection({ onSelectProject }) {
               ].map(tab => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveFilter(tab.id)}
+                  onClick={() => {
+                    setActiveFilter(tab.id);
+                    sound.playClick();
+                  }}
+                  onMouseEnter={() => sound.playHover()}
                   style={{
                     padding: '0.45rem 1rem',
                     borderRadius: 'var(--radius-pill)',
@@ -376,39 +381,64 @@ export default function WorksSection({ onSelectProject }) {
                       >
                         {proj.title}
                       </h3>
-                      <a
-                        href={proj.githubUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{
-                          width: '34px',
-                          height: '34px',
-                          borderRadius: '50%',
-                          background: 'rgba(25, 23, 20, 0.06)',
-                          border: '1px solid var(--border-subtle)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          textDecoration: 'none',
-                          color: 'var(--text-primary)',
-                          fontSize: '1rem',
-                          fontWeight: 700,
-                          transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                          flexShrink: 0
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'var(--bg-dark)';
-                          e.currentTarget.style.color = '#fff';
-                          e.currentTarget.style.transform = 'rotate(45deg)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'rgba(25, 23, 20, 0.06)';
-                          e.currentTarget.style.color = 'var(--text-primary)';
-                          e.currentTarget.style.transform = 'rotate(0deg)';
-                        }}
-                      >
-                        ↗
-                      </a>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <button
+                          onClick={() => {
+                            if (onSelectProject) onSelectProject(proj);
+                            sound.playClick();
+                          }}
+                          style={{
+                            padding: '0.35rem 0.75rem',
+                            borderRadius: 'var(--radius-pill)',
+                            background: 'var(--bg-dark)',
+                            color: '#fff',
+                            border: 'none',
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: '0.72rem',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.3rem'
+                          }}
+                        >
+                          Case Study <span>→</span>
+                        </button>
+                        <a
+                          href={proj.githubUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={() => sound.playClick()}
+                          style={{
+                            width: '34px',
+                            height: '34px',
+                            borderRadius: '50%',
+                            background: 'rgba(25, 23, 20, 0.06)',
+                            border: '1px solid var(--border-subtle)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            textDecoration: 'none',
+                            color: 'var(--text-primary)',
+                            fontSize: '1rem',
+                            fontWeight: 700,
+                            transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                            flexShrink: 0
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'var(--bg-dark)';
+                            e.currentTarget.style.color = '#fff';
+                            e.currentTarget.style.transform = 'rotate(45deg)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'rgba(25, 23, 20, 0.06)';
+                            e.currentTarget.style.color = 'var(--text-primary)';
+                            e.currentTarget.style.transform = 'rotate(0deg)';
+                          }}
+                        >
+                          ↗
+                        </a>
+                      </div>
                     </div>
 
                     <p

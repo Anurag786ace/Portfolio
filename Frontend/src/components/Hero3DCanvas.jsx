@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import bustTextureUrl from '../assets/anurag_3d_bust_transparent.png';
 import depthTextureUrl from '../assets/anurag_depth.png';
+import { sound } from '../utils/audio';
 
 export default function Hero3DCanvas({ scrollProgress = 0, onModeChange }) {
   const containerRef = useRef(null);
@@ -354,6 +355,17 @@ export default function Hero3DCanvas({ scrollProgress = 0, onModeChange }) {
 
     window.addEventListener('mousemove', handleMouseMove);
 
+    // Gyroscope tilt support for mobile / tablets
+    const handleDeviceOrientation = (e) => {
+      if (e.gamma !== null && e.beta !== null) {
+        const x = Math.max(Math.min(e.gamma / 30, 1.2), -1.2);
+        const y = Math.max(Math.min((e.beta - 40) / 30, 1.2), -1.2);
+        mouseRef.current.targetX = x;
+        mouseRef.current.targetY = y;
+      }
+    };
+    window.addEventListener('deviceorientation', handleDeviceOrientation);
+
     // 7. Resize Listener
     const handleResize = () => {
       if (!container) return;
@@ -393,6 +405,7 @@ export default function Hero3DCanvas({ scrollProgress = 0, onModeChange }) {
     return () => {
       cancelAnimationFrame(animFrameRef.current);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('deviceorientation', handleDeviceOrientation);
       window.removeEventListener('resize', handleResize);
       renderer.dispose();
       planeGeo.dispose();
@@ -422,6 +435,7 @@ export default function Hero3DCanvas({ scrollProgress = 0, onModeChange }) {
   // Handle mode switches
   const handleSelectMode = (mode) => {
     setActiveMode(mode);
+    sound.playModeSwitch();
     if (onModeChange) onModeChange(mode);
   };
 

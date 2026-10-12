@@ -40,6 +40,62 @@
   --transition-slow: 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+[data-theme="obsidian"] {
+  --bg-primary: #0b0b0a;
+  --bg-secondary: #141312;
+  --bg-sand: #1c1a17;
+  --bg-card: rgba(24, 22, 20, 0.75);
+  --bg-card-hover: rgba(36, 33, 29, 0.92);
+  --bg-dark: #050505;
+  --bg-dark-surface: #121110;
+
+  --text-primary: #f2eee8;
+  --text-secondary: #aba49a;
+  --text-muted: #736d64;
+  --text-light: #ffffff;
+
+  --accent-gold: #f59e0b;
+  --accent-gold-glow: rgba(245, 158, 11, 0.55);
+  --accent-warm: #fbbf24;
+  --accent-amber: #f59e0b;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-card: rgba(255, 255, 255, 0.12);
+  --border-active: rgba(245, 158, 11, 0.4);
+  --border-dark: rgba(255, 255, 255, 0.16);
+
+  --glass-dark: rgba(14, 13, 12, 0.88);
+  --glass-pill: rgba(24, 22, 20, 0.92);
+}
+
+[data-theme="emerald"] {
+  --bg-primary: #080d0b;
+  --bg-secondary: #0d1713;
+  --bg-sand: #13221b;
+  --bg-card: rgba(15, 28, 22, 0.75);
+  --bg-card-hover: rgba(22, 40, 31, 0.92);
+  --bg-dark: #040806;
+  --bg-dark-surface: #0a1410;
+
+  --text-primary: #e6f7ef;
+  --text-secondary: #97b8aa;
+  --text-muted: #5e7c70;
+  --text-light: #ffffff;
+
+  --accent-gold: #00e676;
+  --accent-gold-glow: rgba(0, 230, 118, 0.5);
+  --accent-warm: #69f0ae;
+  --accent-amber: #10b981;
+
+  --border-subtle: rgba(0, 230, 118, 0.12);
+  --border-card: rgba(0, 230, 118, 0.18);
+  --border-active: rgba(0, 230, 118, 0.45);
+  --border-dark: rgba(255, 255, 255, 0.14);
+
+  --glass-dark: rgba(10, 18, 14, 0.9);
+  --glass-pill: rgba(15, 28, 22, 0.94);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -396,3 +452,670 @@ section {
 .social-link-animated:hover {
   animation: iconBounce 0.5s ease;
 }
+
+/* Sound Waveform Animated Bars */
+.sound-bars {
+  display: flex;
+  align-items: center;
+  gap: 2.5px;
+  height: 14px;
+}
+
+.sound-bar {
+  width: 2.5px;
+  background-color: var(--text-primary);
+  border-radius: 2px;
+  transition: height 0.2s ease;
+}
+
+.sound-playing .sound-bar:nth-child(1) {
+  animation: soundWave 0.8s ease-in-out infinite alternate;
+}
+.sound-playing .sound-bar:nth-child(2) {
+  animation: soundWave 0.6s ease-in-out 0.2s infinite alternate;
+}
+.sound-playing .sound-bar:nth-child(3) {
+  animation: soundWave 0.9s ease-in-out 0.4s infinite alternate;
+}
+
+@keyframes soundWave {
+  0% { height: 3px; }
+  100% { height: 14px; }
+}
+
+/* Command Palette Modal */
+.cmd-palette-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12vh;
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cmd-palette-container {
+  width: 92%;
+  max-width: 620px;
+  background: var(--bg-card);
+  backdrop-filter: blur(28px);
+  border: 1px solid var(--border-active);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  animation: scaleIn 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96) translateY(-10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Project Drawer Slide-in */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(14px);
+  z-index: 9998;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 0.25s ease;
+}
+
+.drawer-panel {
+  width: 100%;
+  max-width: 720px;
+  height: 100vh;
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border-active);
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.35);
+  overflow-y: auto;
+  animation: slideDrawer 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideDrawer {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* ==========================================================================
+   Interactive Skill Physics & Digital Monogram Voxel Matrix
+   ========================================================================== */
+
+.skill-orbit-section {
+  margin-top: 3.5rem;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(130% 120% at 50% 0%, #22201d 0%, #161513 55%, #0e0d0c 100%);
+  border: 1px solid rgba(245, 158, 11, 0.16);
+  padding: 2.25rem 2rem 1.75rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(245, 158, 11, 0.2);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.skill-orbit-ambient-flare {
+  position: absolute;
+  top: -12%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 580px;
+  height: 280px;
+  background: radial-gradient(ellipse at 50% 40%, rgba(245, 158, 11, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+/* Header */
+.skill-orbit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+  z-index: 2;
+}
+
+.skill-orbit-title-block {
+  flex: 1 1 340px;
+  min-width: 0;
+}
+
+.skill-orbit-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #f59e0b;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+  margin-bottom: 0.35rem;
+  line-height: 1.4;
+}
+
+.skill-orbit-eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 10px #f59e0b;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.skill-orbit-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3.2vw, 1.75rem);
+  font-weight: 700;
+  color: #f5f2eb;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-bottom: 0.45rem;
+}
+
+.skill-orbit-desc-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: #aba49a;
+  line-height: 1.5;
+}
+
+.skill-orbit-source-link {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: #f59e0b;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.skill-orbit-source-link:hover {
+  color: #fbbf24;
+  transform: translateX(2px);
+}
+
+/* Toolbar & Legend Controls */
+.skill-orbit-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.65rem;
+  flex: 0 0 auto;
+}
+
+.skill-orbit-toolbar {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  background: rgba(22, 21, 19, 0.9);
+  border: 1px solid rgba(245, 158, 11, 0.22);
+  border-radius: var(--radius-pill);
+  padding: 0.3rem 0.45rem;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.skill-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.38rem 0.8rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  background: transparent;
+  color: #a39c94;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.skill-toolbar-btn:hover {
+  color: #f5f2eb;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.skill-toolbar-btn.active {
+  background: rgba(245, 158, 11, 0.22);
+  color: #fef3c7;
+  border-color: rgba(245, 158, 11, 0.48);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+}
+
+.skill-toolbar-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 0 0.2rem;
+  flex-shrink: 0;
+}
+
+/* Legend row */
+.skill-orbit-subbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.skill-legend-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.skill-legend-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: #736d64;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 0.25rem;
+}
+
+.skill-legend-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(25, 23, 21, 0.6);
+  color: #aba49a;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.skill-legend-pill:hover {
+  color: #f5f2eb;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.skill-legend-pill.active {
+  background: rgba(245, 158, 11, 0.14);
+  color: #fef3c7;
+  border-color: var(--pill-color, #f59e0b);
+}
+
+.legend-color-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Physics Drawer */
+.skill-physics-drawer {
+  background: rgba(22, 21, 19, 0.95);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  backdrop-filter: blur(14px);
+  animation: fadeIn 0.2s ease;
+  position: relative;
+  z-index: 3;
+}
+
+.physics-control-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #d5cecd;
+}
+
+.physics-control-item label {
+  min-width: 140px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.physics-slider {
+  accent-color: #f59e0b;
+  cursor: pointer;
+  width: 110px;
+}
+
+.physics-reset-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #aba49a;
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.physics-reset-btn:hover {
+  color: #f5f2eb;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+/* Canvas Area */
+.skill-orbit-canvas-wrap {
+  width: 100%;
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #0d0c0a;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.85);
+  user-select: none;
+}
+
+.skill-orbit-canvas {
+  width: 100%;
+  height: 480px;
+  display: block;
+  cursor: grab;
+  touch-action: none;
+}
+
+.skill-orbit-canvas:active {
+  cursor: grabbing;
+}
+
+.skill-vignette-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(13, 12, 10, 0.65) 95%);
+  z-index: 2;
+}
+
+/* Animated SVG Connector Lines */
+.skill-orbit-svg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.orbit-dashed-line {
+  stroke-dasharray: 4 6;
+  animation: orbitDashFlow 1.4s linear infinite;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease, opacity 0.3s ease;
+}
+
+@keyframes orbitDashFlow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -20; }
+}
+
+.orbit-anchor-dot {
+  transition: r 0.3s ease, fill 0.3s ease;
+}
+
+/* HTML Skill Pills Layer */
+.skill-orbit-pills-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.skill-pill-node {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: auto;
+  will-change: transform;
+  transition: opacity 0.3s ease;
+}
+
+.skill-pill-node.dimmed {
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.skill-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-pill);
+  background: rgba(18, 17, 15, 0.92);
+  border: 1.2px solid rgba(255, 255, 255, 0.12);
+  color: #f5f2eb;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.skill-pill-btn:focus-visible {
+  outline: 2px solid var(--skill-color, #f59e0b);
+  outline-offset: 2px;
+}
+
+.skill-pill-btn:hover,
+.skill-pill-btn.focused {
+  background: #0e0d0b;
+  border-color: var(--skill-color, #f59e0b);
+  transform: scale(1.1);
+  box-shadow: 0 0 20px var(--skill-glow, rgba(245, 158, 11, 0.35)), 0 6px 18px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+
+.skill-pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Floating Tooltip */
+.skill-orbit-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(16, 15, 13, 0.96);
+  border: 1px solid var(--skill-color, rgba(245, 158, 11, 0.45));
+  border-radius: 8px;
+  padding: 0.45rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #f5f2eb;
+  white-space: nowrap;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(245, 158, 11, 0.2);
+  backdrop-filter: blur(12px);
+  pointer-events: auto;
+  z-index: 25;
+  animation: fadeIn 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.skill-tooltip-tag {
+  font-size: 0.64rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+}
+
+.skill-tooltip-link {
+  color: #38bdf8;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 600;
+  transition: color 0.18s ease;
+}
+
+.skill-tooltip-link:hover {
+  color: #7dd3fc;
+}
+
+/* Monospace HUD */
+.skill-orbit-hud {
+  position: absolute;
+  bottom: 0.85rem;
+  right: 0.95rem;
+  z-index: 6;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: #aba49a;
+  background: rgba(16, 15, 13, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(8px);
+}
+
+.skill-hud-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  display: inline-block;
+}
+
+.skill-hud-sep {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Hint Pill under canvas */
+.skill-hint-pill-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.9rem;
+  position: relative;
+  z-index: 2;
+}
+
+.skill-hint-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.15rem;
+  border-radius: var(--radius-pill);
+  background: rgba(24, 22, 20, 0.95);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fef3c7;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.skill-hint-pill.hint-hidden {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+/* Responsive Media Queries for 375, 768, 1280, 1920px */
+@media (max-width: 1024px) {
+  .skill-orbit-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .skill-orbit-controls {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .skill-orbit-section {
+    padding: 1.75rem 1.25rem 1.25rem;
+    margin-top: 2.5rem;
+  }
+  .skill-orbit-canvas {
+    height: 440px;
+  }
+  .skill-orbit-toolbar {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .skill-orbit-subbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .skill-orbit-section {
+    padding: 1.25rem 0.85rem 1rem;
+    border-radius: var(--radius-md);
+  }
+  .skill-orbit-canvas {
+    height: 380px;
+  }
+  .skill-orbit-eyebrow {
+    font-size: 0.66rem;
+  }
+  .skill-orbit-title {
+    font-size: 1.22rem;
+  }
+  .skill-toolbar-btn {
+    padding: 0.32rem 0.6rem;
+    font-size: 0.68rem;
+    gap: 0.3rem;
+  }
+  .skill-legend-pill {
+    padding: 0.22rem 0.5rem;
+    font-size: 0.66rem;
+  }
+  .skill-hint-pill {
+    font-size: 0.68rem;
+    padding: 0.38rem 0.85rem;
+    text-align: center;
+  }
+}
+
