@@ -12,12 +12,14 @@ import ContactModal from './components/ContactModal';
 import CustomCursor from './components/CustomCursor';
 import CommandPalette from './components/CommandPalette';
 import ProjectModal from './components/ProjectModal';
+import InquiriesModal from './components/InquiriesModal';
 import { sound } from './utils/audio';
 import './App.css';
 
 export default function App() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [contactModalOpen, setContactModalOpen] = useState(false);
+  const [inquiriesModalOpen, setInquiriesModalOpen] = useState(false);
   const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [pageLoaded, setPageLoaded] = useState(false);
@@ -146,6 +148,7 @@ export default function App() {
         soundEnabled={soundEnabled}
         onToggleSound={handleToggleSound}
         onOpenContact={handleOpenContact}
+        onOpenInquiries={() => setInquiriesModalOpen(true)}
       />
 
       {/* Project Case Study Drawer */}
@@ -154,6 +157,12 @@ export default function App() {
         isOpen={Boolean(selectedProject)}
         onClose={() => setSelectedProject(null)}
         onOpenContact={handleOpenContact}
+      />
+
+      {/* MongoDB Inquiries & Subscribers Viewer */}
+      <InquiriesModal
+        isOpen={inquiriesModalOpen}
+        onClose={() => setInquiriesModalOpen(false)}
       />
     </div>
   );

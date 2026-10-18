@@ -8,7 +8,8 @@ export default function CommandPalette({
   currentTheme,
   soundEnabled,
   onToggleSound,
-  onOpenContact
+  onOpenContact,
+  onOpenInquiries
 }) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -127,6 +128,17 @@ export default function CommandPalette({
       category: 'Action',
       shortcut: '⌘C',
       action: handleCopyEmail
+    },
+    {
+      id: 'action-inquiries',
+      title: 'View Inquiries & Messages (MongoDB Database)',
+      category: 'Database',
+      shortcut: '⌘M',
+      badge: 'MongoDB',
+      action: () => {
+        onClose();
+        if (onOpenInquiries) onOpenInquiries();
+      }
     },
     {
       id: 'action-github',

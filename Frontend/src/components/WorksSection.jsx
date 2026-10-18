@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SmoothReveal from './SmoothReveal';
 import bloomImg from '../assets/fibrous_bloom_orb.jpg';
 import canImg from '../assets/futuristic_can_showcase.jpg';
+import resonaImg from '../assets/resona_climate_ai.png';
 import { sound } from '../utils/audio';
 
 export default function WorksSection({ onSelectProject }) {
@@ -50,24 +51,30 @@ export default function WorksSection({ onSelectProject }) {
       githubUrl: 'https://github.com/Anurag786ace'
     },
     {
-      id: 'prism-ui',
-      category: 'frontend',
-      badge: 'UI FRAMEWORK',
-      title: 'Prism Micro-Interaction System',
-      subtitle: 'High-performance design system with zero-dependency CSS architecture',
-      desc: 'A curated collection of frictionless web components, physics-based gesture navigation, spring animations, and glassmorphic micro-utilities built without bloat.',
-      image: null,
-      customVisual: 'prism-grid',
-      tags: ['React', 'Vanilla CSS', 'Web Audio API', 'Accessibility', 'Vite'],
-      metrics: '<12kb Bundle · 100/100 Lighthouse · 0 External CSS Libs',
-      liveUrl: 'https://github.com/Anurag786ace',
-      githubUrl: 'https://github.com/Anurag786ace'
+      id: 'resona-weather-ai',
+      category: 'climate-ai',
+      categoryGroup: ['ai-agents', 'climate-ai'],
+      badge: 'AI CLIMATE INTELLIGENCE',
+      title: 'Resona — AI Weather Alert & Forecast System',
+      subtitle: 'Disaster early warning and hyper-local climate forecast across 27+ vernacular languages',
+      desc: 'An AI-powered climate intelligence and emergency alert platform that delivers real-time weather anomaly detection, Category-4 cyclone simulation drills with historical IMD benchmarks, and multi-hazard broadcasts in 27+ vernacular regional languages.',
+      architectureDesc: 'Engineered an intelligent multilingual translation and dispatch pipeline where official emergency alerts are parsed, verified, and mapped onto live interactive disaster maps via Mapbox GL and NASA EONET feeds. One validated AI translation is generated per required language—eliminating redundant calls while guaranteeing sub-second warning delivery to last-mile communities.',
+      image: resonaImg,
+      imagePosition: 'center top',
+      tags: ['AI / Multilingual NLP', '27 Vernacular Langs', 'React 18', 'Mapbox GL', 'NASA EONET', 'FastAPI'],
+      metrics: '27 Vernacular Languages · IMD Category-4 Benchmarks · Zero-Delay Alert Synthesis',
+      liveUrl: 'https://weatheralertsystem-azure.vercel.app/',
+      githubUrl: 'https://github.com/Anurag786ace/WeatherAlertSystem'
     }
   ];
 
   const filteredProjects = activeFilter === 'all'
     ? projects
-    : projects.filter(p => p.category === activeFilter);
+    : projects.filter(p =>
+        p.category === activeFilter ||
+        (Array.isArray(p.category) && p.category.includes(activeFilter)) ||
+        (p.categoryGroup && p.categoryGroup.includes(activeFilter))
+      );
 
   // 3D Card Hover Tilt Effect
   const handleMouseMove = (e, id) => {
@@ -130,10 +137,10 @@ export default function WorksSection({ onSelectProject }) {
             >
               {[
                 { id: 'all', label: 'All Artifacts' },
+                { id: 'climate-ai', label: 'Climate & Vernacular AI' },
+                { id: 'ai-agents', label: 'Autonomous Agents' },
                 { id: '3d-ai', label: '3D & Generative' },
-                { id: 'interactive-3d', label: 'Commercial 3D' },
-                { id: 'ai-agents', label: 'AI & Agents' },
-                { id: 'frontend', label: 'UI Architecture' }
+                { id: 'interactive-3d', label: 'Commercial 3D' }
               ].map(tab => (
                 <button
                   key={tab.id}
@@ -193,7 +200,11 @@ export default function WorksSection({ onSelectProject }) {
                   className="project-card"
                 >
                   {/* Media Preview Box */}
-                  <div
+                  <a
+                    href={proj.liveUrl || proj.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => sound.playClick()}
                     style={{
                       position: 'relative',
                       width: '100%',
@@ -202,8 +213,12 @@ export default function WorksSection({ onSelectProject }) {
                       overflow: 'hidden',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      textDecoration: 'none'
                     }}
+                    className="project-media-box"
+                    aria-label={`Open live site for ${proj.title}`}
                   >
                     {proj.image ? (
                       <img
@@ -213,6 +228,7 @@ export default function WorksSection({ onSelectProject }) {
                           width: '100%',
                           height: '100%',
                           objectFit: 'cover',
+                          objectPosition: proj.imagePosition || 'center',
                           transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
                         }}
                         className="project-img"
@@ -358,7 +374,45 @@ export default function WorksSection({ onSelectProject }) {
                     >
                       {proj.badge}
                     </div>
-                  </div>
+
+                    {/* Live Indicator Pill on Box */}
+                    {proj.liveUrl && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          bottom: '1.25rem',
+                          right: '1.25rem',
+                          background: 'rgba(20, 19, 17, 0.88)',
+                          backdropFilter: 'blur(10px)',
+                          color: '#fff',
+                          padding: '0.38rem 0.85rem',
+                          borderRadius: 'var(--radius-pill)',
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: '0.7rem',
+                          fontWeight: 600,
+                          letterSpacing: '0.04em',
+                          border: '1px solid rgba(255, 255, 255, 0.16)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.45rem',
+                          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+                          transition: 'all 0.25s ease'
+                        }}
+                        className="live-demo-pill"
+                      >
+                        <span
+                          style={{
+                            width: '6px',
+                            height: '6px',
+                            borderRadius: '50%',
+                            background: '#22c55e',
+                            boxShadow: '0 0 8px #22c55e'
+                          }}
+                        />
+                        <span>Launch App ↗</span>
+                      </div>
+                    )}
+                  </a>
 
                   {/* Card Information */}
                   <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
@@ -370,17 +424,28 @@ export default function WorksSection({ onSelectProject }) {
                         marginBottom: '0.6rem'
                       }}
                     >
-                      <h3
-                        style={{
-                          fontFamily: 'var(--font-display)',
-                          fontSize: '1.65rem',
-                          fontWeight: 700,
-                          color: 'var(--text-primary)',
-                          letterSpacing: '-0.02em'
-                        }}
+                      <a
+                        href={proj.liveUrl || proj.githubUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={() => sound.playClick()}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                        title={proj.liveUrl ? 'Launch Live Application' : 'View Source'}
                       >
-                        {proj.title}
-                      </h3>
+                        <h3
+                          style={{
+                            fontFamily: 'var(--font-display)',
+                            fontSize: '1.65rem',
+                            fontWeight: 700,
+                            color: 'var(--text-primary)',
+                            letterSpacing: '-0.02em',
+                            transition: 'color 0.2s ease'
+                          }}
+                          className="project-title-link"
+                        >
+                          {proj.title}
+                        </h3>
+                      </a>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <button
                           onClick={() => {
@@ -405,10 +470,11 @@ export default function WorksSection({ onSelectProject }) {
                           Case Study <span>→</span>
                         </button>
                         <a
-                          href={proj.githubUrl}
+                          href={proj.liveUrl || proj.githubUrl}
                           target="_blank"
                           rel="noreferrer"
                           onClick={() => sound.playClick()}
+                          title={proj.liveUrl ? 'Launch Live Application' : 'View Repository'}
                           style={{
                             width: '34px',
                             height: '34px',

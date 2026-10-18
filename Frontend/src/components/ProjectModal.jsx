@@ -66,7 +66,7 @@ export default function ProjectModal({ project, isOpen, onClose, onOpenContact }
                 letterSpacing: '0.05em'
               }}
             >
-              CASE STUDY // {project.category.toUpperCase()}
+              CASE STUDY // {(Array.isArray(project.category) ? project.category.join(' & ') : (project.category || '')).toUpperCase()}
             </span>
           </div>
 
@@ -106,21 +106,31 @@ export default function ProjectModal({ project, isOpen, onClose, onOpenContact }
         <div style={{ padding: '2rem 2.5rem 4rem' }}>
           {/* Main Visual or Graphic Preview */}
           {project.image ? (
-            <div
-              style={{
-                borderRadius: 'var(--radius-md)',
-                overflow: 'hidden',
-                marginBottom: '2rem',
-                border: '1px solid var(--border-subtle)',
-                boxShadow: '0 15px 40px rgba(0,0,0,0.1)'
-              }}
+            <a
+              href={project.liveUrl || project.githubUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => sound.playClick()}
+              style={{ display: 'block', textDecoration: 'none', cursor: 'pointer' }}
+              title={project.liveUrl ? "Click to open live application" : "View source"}
             >
-              <img
-                src={project.image}
-                alt={project.title}
-                style={{ width: '100%', height: 'auto', display: 'block' }}
-              />
-            </div>
+              <div
+                style={{
+                  borderRadius: 'var(--radius-md)',
+                  overflow: 'hidden',
+                  marginBottom: '2rem',
+                  border: '1px solid var(--border-subtle)',
+                  boxShadow: '0 15px 40px rgba(0,0,0,0.1)',
+                  position: 'relative'
+                }}
+              >
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                />
+              </div>
+            </a>
           ) : (
             <div
               style={{
@@ -260,9 +270,7 @@ export default function ProjectModal({ project, isOpen, onClose, onOpenContact }
                 02 // Algorithmic Architecture & Verification
               </h4>
               <p style={{ fontSize: '0.95rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
-                Leveraging modular state management, hardware-accelerated shaders, and strict latency bounds.
-                All calculations utilize optimized matrix transformations and vector operations to prevent
-                frame dropping across mobile and desktop viewports.
+                {project.architectureDesc || 'Leveraging modular state management, hardware-accelerated shaders, and strict latency bounds. All calculations utilize optimized matrix transformations and vector operations to prevent frame dropping across mobile and desktop viewports.'}
               </p>
             </div>
 
@@ -301,6 +309,24 @@ export default function ProjectModal({ project, isOpen, onClose, onOpenContact }
 
           {/* Action CTAs */}
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-pill btn-pill-dark"
+                onClick={() => sound.playClick()}
+                style={{
+                  background: 'var(--accent-gold)',
+                  color: '#1a1816',
+                  fontWeight: 700
+                }}
+              >
+                <span>Launch Live Application</span>
+                <span className="arrow-circle" style={{ background: '#1a1816', color: '#fff' }}>↗</span>
+              </a>
+            )}
+
             <a
               href={project.githubUrl || 'https://github.com/Anurag786ace'}
               target="_blank"

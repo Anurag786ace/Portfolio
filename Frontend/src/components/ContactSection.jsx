@@ -1,23 +1,41 @@
 import React, { useState } from 'react';
 import SmoothReveal from './SmoothReveal';
+import { submitContactMessage } from '../utils/api';
+import { sound } from '../utils/audio';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '', role: 'project' });
   const [submitted, setSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   const emailAddress = 'sankhaanurag2005@gmail.com';
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(emailAddress);
     setCopied(true);
+    sound.playSuccess();
     setTimeout(() => setCopied(false), 2400);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
-    setSubmitted(true);
+    if (!formData.name || !formData.email || !formData.message || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      await submitContactMessage(formData);
+      sound.playSuccess();
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Submission error:', err);
+      setSubmitError(err.message || 'Something went wrong while sending your message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const socialLinks = [
@@ -227,10 +245,13 @@ export default function ContactSection() {
                       marginBottom: '0.75rem'
                     }}
                   >
-                    Message Sent!
+                    Message Transmitted!
                   </h3>
-                  <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-                    Thank you, {formData.name}. I'll review your note and get back to you within 24 hours.
+                  <p style={{ color: 'var(--text-secondary)', marginBottom: '0.85rem' }}>
+                    Thank you, {formData.name}. Your note has been safely stored in the database and notified to Anurag.
+                  </p>
+                  <p style={{ fontSize: '0.85rem', color: '#16a34a', marginBottom: '2rem', fontFamily: 'var(--font-mono)' }}>
+                    ● Stored in MongoDB & notification dispatched
                   </p>
                   <button
                     onClick={() => {
@@ -244,6 +265,21 @@ export default function ContactSection() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  {submitError && (
+                    <div
+                      style={{
+                        padding: '0.85rem 1.1rem',
+                        borderRadius: 'var(--radius-md)',
+                        background: 'rgba(239, 68, 68, 0.08)',
+                        border: '1px solid rgba(239, 68, 68, 0.25)',
+                        color: '#dc2626',
+                        fontSize: '0.88rem'
+                      }}
+                    >
+                      {submitError}
+                    </div>
+                  )}
+
                   <div>
                     <label
                       style={{
@@ -262,6 +298,7 @@ export default function ContactSection() {
                       required
                       placeholder="e.g. Alex Vance"
                       value={formData.name}
+                      disabled={isSubmitting}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       style={{
                         width: '100%',
@@ -272,7 +309,8 @@ export default function ContactSection() {
                         fontSize: '0.95rem',
                         fontFamily: 'var(--font-body)',
                         outline: 'none',
-                        transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
+                        transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+                        opacity: isSubmitting ? 0.7 : 1
                       }}
                       onFocus={(e) => {
                         e.target.style.borderColor = 'var(--accent-gold)';
@@ -303,6 +341,7 @@ export default function ContactSection() {
                       required
                       placeholder="alex@company.com"
                       value={formData.email}
+                      disabled={isSubmitting}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       style={{
                         width: '100%',
@@ -313,7 +352,8 @@ export default function ContactSection() {
                         fontSize: '0.95rem',
                         fontFamily: 'var(--font-body)',
                         outline: 'none',
-                        transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
+                        transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+                        opacity: isSubmitting ? 0.7 : 1
                       }}
                       onFocus={(e) => {
                         e.target.style.borderColor = 'var(--accent-gold)';
@@ -344,6 +384,7 @@ export default function ContactSection() {
                       required
                       placeholder="Tell me about what you're building..."
                       value={formData.message}
+                      disabled={isSubmitting}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       style={{
                         width: '100%',
@@ -355,7 +396,8 @@ export default function ContactSection() {
                         fontFamily: 'var(--font-body)',
                         outline: 'none',
                         resize: 'vertical',
-                        transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
+                        transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+                        opacity: isSubmitting ? 0.7 : 1
                       }}
                       onFocus={(e) => {
                         e.target.style.borderColor = 'var(--accent-gold)';
@@ -370,16 +412,19 @@ export default function ContactSection() {
 
                   <button
                     type="submit"
+                    disabled={isSubmitting}
                     className="btn-pill btn-pill-dark"
                     style={{
                       padding: '0.9rem',
                       justifyContent: 'center',
                       fontSize: '0.95rem',
-                      marginTop: '0.5rem'
+                      marginTop: '0.5rem',
+                      opacity: isSubmitting ? 0.75 : 1,
+                      cursor: isSubmitting ? 'not-allowed' : 'pointer'
                     }}
                   >
-                    <span>Transmit Message</span>
-                    <span className="arrow-circle">→</span>
+                    <span>{isSubmitting ? 'Transmitting to Database...' : 'Transmit Message'}</span>
+                    <span className="arrow-circle">{isSubmitting ? '⌛' : '→'}</span>
                   </button>
                 </form>
               )}

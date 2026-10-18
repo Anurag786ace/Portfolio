@@ -1,15 +1,37 @@
 import React, { useState } from 'react';
+import { submitSubscriber } from '../utils/api';
+import { sound } from '../utils/audio';
 
 export default function ContactModal({ isOpen, onClose }) {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   if (!isOpen) return null;
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
-    if (!email) return;
-    setSubscribed(true);
+    if (!email || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setErrorMsg(null);
+
+    try {
+      await submitSubscriber(email, 'contact_modal');
+      sound.playSuccess();
+      setSubscribed(true);
+    } catch (err) {
+      console.error('Subscription error:', err);
+      setErrorMsg(err.message || 'Could not subscribe. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClose = () => {
+    sound.playClose();
+    onClose();
   };
 
   return (
@@ -25,7 +47,7 @@ export default function ContactModal({ isOpen, onClose }) {
         backdropFilter: 'blur(12px)',
         padding: '1.5rem'
       }}
-      onClick={onClose}
+      onClick={handleClose}
     >
       <div
         style={{
@@ -41,7 +63,7 @@ export default function ContactModal({ isOpen, onClose }) {
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          onClick={onClose}
+          onClick={handleClose}
           style={{
             position: 'absolute',
             top: '1.25rem',
@@ -97,15 +119,38 @@ export default function ContactModal({ isOpen, onClose }) {
             <div style={{ color: '#22c55e', fontWeight: 700, fontSize: '1.1rem', marginBottom: '0.4rem' }}>
               You're on the list!
             </div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
-              Check your inbox shortly for an introductory transmission.
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '0.75rem' }}>
+              Your email is stored in MongoDB & notification recorded.
             </p>
+            <button
+              onClick={handleClose}
+              className="btn-pill btn-pill-dark"
+              style={{ padding: '0.55rem 1.2rem', fontSize: '0.85rem' }}
+            >
+              Done
+            </button>
           </div>
         ) : (
           <form onSubmit={handleSubscribe} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {errorMsg && (
+              <div
+                style={{
+                  padding: '0.75rem 1rem',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  color: '#dc2626',
+                  fontSize: '0.85rem'
+                }}
+              >
+                {errorMsg}
+              </div>
+            )}
+
             <input
               type="email"
               required
+              disabled={isSubmitting}
               placeholder="Enter your email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -116,21 +161,25 @@ export default function ContactModal({ isOpen, onClose }) {
                 border: '1px solid var(--border-card)',
                 outline: 'none',
                 fontSize: '0.95rem',
-                fontFamily: 'var(--font-body)'
+                fontFamily: 'var(--font-body)',
+                opacity: isSubmitting ? 0.7 : 1
               }}
             />
 
             <button
               type="submit"
+              disabled={isSubmitting}
               className="btn-pill btn-pill-dark"
               style={{
                 padding: '0.85rem',
                 justifyContent: 'center',
-                fontSize: '0.92rem'
+                fontSize: '0.92rem',
+                opacity: isSubmitting ? 0.75 : 1,
+                cursor: isSubmitting ? 'not-allowed' : 'pointer'
               }}
             >
-              <span>Subscribe to Updates</span>
-              <span className="arrow-circle">→</span>
+              <span>{isSubmitting ? 'Saving to Database...' : 'Subscribe to Updates'}</span>
+              <span className="arrow-circle">{isSubmitting ? '⌛' : '→'}</span>
             </button>
           </form>
         )}
@@ -138,3 +187,4 @@ export default function ContactModal({ isOpen, onClose }) {
     </div>
   );
 }
+

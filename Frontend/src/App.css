@@ -95,3 +95,19 @@
 .glow-ambient {
   animation: pulseGlow 4s ease-in-out infinite;
 }
+
+/* Media Box and Live Badge Interactions */
+.project-media-box {
+  cursor: pointer;
+}
+
+.project-media-box:hover .live-demo-pill {
+  transform: translateY(-3px) scale(1.04);
+  background: rgba(22, 20, 18, 0.98) !important;
+  border-color: var(--accent-gold) !important;
+  box-shadow: 0 6px 20px rgba(216, 131, 42, 0.35) !important;
+}
+
+.project-title-link:hover {
+  color: var(--accent-gold) !important;
+}
